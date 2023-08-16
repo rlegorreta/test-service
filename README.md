@@ -78,7 +78,7 @@ In order to check that the Authorization server microservice we need to follow t
 
 http://localhost:9000/oauth/token       to get the token with a valida username password and application.
 
-note: The Neo4j database needs to be started in order to get a token
+note: The Neo4j database needs to be started in order to get a token.
 
 Other REST service (documented in swagger) are:
 
