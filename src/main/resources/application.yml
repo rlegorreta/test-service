@@ -1,5 +1,5 @@
 server:
-  port: 9000
+  port: 9080
   shutdown: graceful
   tomcat:
     connection-timeout: 2s
@@ -10,7 +10,7 @@ server:
 
 spring:
   application:
-    name: auth-service
+    name: test-service
   lifecycle:
     timeout-per-shutdown-phase: 15s
   config:
@@ -26,28 +26,33 @@ spring:
         initial-interval: 1000        # Initial retry interval for backoff (ms)
         max-interval: 2000            # Maximum retry interval for backoff (ms)
         multiplier: 1.1               # Multiplier to compute the next interval
-  jpa:
-    open-in-view: true
-  flyway:
-    enabled: true
-    locations: classpath:/db/migration
+  profiles:
+    active: kubernetes
+  security:
+    oauth2:
+      client:
+        registration:
+          test-service-credentials:
+            provider: spring
+            client-id: test-service
+            client-secret: test-service-secret
+            authorization-grant-type: client_credentials
+            scope: iam.facultad
+            client-name: test-service-credentials
+        provider:
+          spring:
+            issuer-uri: http://auth:9000
+        rest:
+          client-id: test-service-credentials
+      resourceserver:
+        jwt:
+          issuer-uri: http://auth:9000
+
+security:
+  clientId: test-service      # Needed by the AuthServerUserLookupService class
 
 management:
   endpoints:
     web:
       exposure:
-        include: "*"
-
-logging:
-  level:
-    root: WARN
-    com:
-      netflix: WARN
-      ailegorreta:
-        authservice: WARN
-        authservice.config: DEBUG
-    org:
-      springframework:
-        web: WARN
-        security: WARN
-
+        include: refresh

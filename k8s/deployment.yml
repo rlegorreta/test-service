@@ -1,39 +1,33 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: auth-service
+  name: test-service
   labels:
-    app: auth-service
+    app: test-service
 spec:
   replicas: 1
-  selector:
+  selector:                 # Defines the labels used to select the Pods to be scaled
     matchLabels:
-      app: auth-service
+      app: test-service
   template:
     metadata:
       labels:
-        app: auth-service
+        app: test-service
     spec:
       containers:
-        - name: auth-service
-          image: auth-service
+        - name: test-service
+          image: docker.io/ailegorreta/test-service:latest
           imagePullPolicy: IfNotPresent
-          lifecycle:
+          lifecycle:    # Makes Kubernetes wait 5 seconds before sending the SIGTERM signal to the Pod
             preStop:
               exec:
-                command: [ "sh", "-c", "sleep 5" ]
+                command: [ "sh", "-c", "sleep 5" ]  #
           ports:
-            - containerPort: 9000
+            - containerPort: 8080
           env:
+            - name: BPL_JVM_THREAD_COUNT
+              value: "50"
             - name: SPRING_CLOUD_CONFIG_URI
               value: http://config-service
-            - name: SPRING_DATASOURCE_URL
-              value: jdbc:postgresql://ailegorreta-postgres-cluster-rw/authdb
-            - name: SPRING_R2DBC_URL
-              value: r2dbc:postgresql://ailegorreta-postgres-cluster-rw/authdb
-            - name: SPRING_FLYWAY_URL
-              value: jdbc:postgresql://ailegorreta-postgres-cluster-rw/authdb
-            - name: SPRING_NEO4J_URI
-              value: bolt://ailegorreta-neo4j
-            - name: LDAP_URI
-              value: ldap://openldap
+            - name: SPRING_PROFILES_ACTIVE
+              value: local

@@ -1,8 +1,0 @@
-spring:
-  # datasource:           # PostgresSQL TestContainer is NOT evaluated because is just for the
-                          # Spring Authorization Server; i.e., nothing to test
-  #  url: jdbc:tc:postgresql:14.4:///
-    # ^ Identifies the PostgreSQL module in Testcontainers. “14.4” is the version of PostgreSQL to use.
-  flyway:
-    enabled: false
-
